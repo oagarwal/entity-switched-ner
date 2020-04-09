@@ -21,11 +21,11 @@ def switch_entities(input_file, output_file, entities):
             line = line.strip()
             if line:
                 if 'DOCSTART' in line:
-                    fw.write(line + "\n")
+                    fw.write("-DOCSTART- O\n")
                     continue
                 line  = line.split()
                 word = line[0]
-                tag = line[-1]
+                tag = line[-1][2:] if len(line[-1]) > 1 else "O"
                 if tag != prev_tag and ent:
                     new_ent = entities[ent_id]
                     write_new_entity(new_ent, prev_tag, fw)
@@ -37,7 +37,7 @@ def switch_entities(input_file, output_file, entities):
                     else:
                         ent += " " + word
                 else:
-                    fw.write(" ".join(line) + "\n")
+                    fw.write(word + " " + tag + "\n")
                 prev_tag = tag
             else:
                 if ent:
